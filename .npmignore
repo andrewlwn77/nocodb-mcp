@@ -1,0 +1,40 @@
+# Source files (TypeScript)
+src/
+*.ts
+!dist/**/*.d.ts
+
+# Configuration files
+tsconfig.json
+.env
+.env.*
+.gitignore
+.mcp.json
+
+# Development directories
+.claude/
+agent-team-files/
+docs/
+test/
+scripts/
+examples/
+!examples/basic-usage.md
+
+# IDE and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build artifacts
+*.log
+coverage/
+*.tgz
+
+# Git
+.git/
+.github/
+
+# Documentation (keep only essential files)
+CLAUDE.md

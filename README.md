@@ -14,8 +14,16 @@ A Model Context Protocol (MCP) server that provides a comprehensive interface to
 
 ## Installation
 
+### Via NPM (Global)
+
 ```bash
-npm install @mcp-servers/nocodb
+npm install -g @andrewlwn77/nocodb-mcp
+```
+
+### Via NPX (No installation)
+
+```bash
+npx @andrewlwn77/nocodb-mcp
 ```
 
 ## Configuration
@@ -51,8 +59,24 @@ Add to your Claude Desktop configuration file:
 {
   "mcpServers": {
     "nocodb": {
-      "command": "node",
-      "args": ["/path/to/nocodb-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["@andrewlwn77/nocodb-mcp"],
+      "env": {
+        "NOCODB_BASE_URL": "http://localhost:8080",
+        "NOCODB_API_TOKEN": "your_api_token_here"
+      }
+    }
+  }
+}
+```
+
+Or if installed globally:
+
+```json
+{
+  "mcpServers": {
+    "nocodb": {
+      "command": "nocodb-mcp",
       "env": {
         "NOCODB_BASE_URL": "http://localhost:8080",
         "NOCODB_API_TOKEN": "your_api_token_here"
