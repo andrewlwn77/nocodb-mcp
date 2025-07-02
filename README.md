@@ -6,6 +6,7 @@ A Model Context Protocol (MCP) server that provides a comprehensive interface to
 
 - **Database Operations**: List and manage NocoDB bases/projects
 - **Table Management**: Create, list, and delete tables with custom schemas
+- **Column Management**: Add columns to existing tables with full type support
 - **Record CRUD**: Full create, read, update, delete operations on records
 - **Advanced Queries**: Filter, sort, search, and aggregate data
 - **View Management**: Create and use different views (Grid, Gallery, Form, etc.)
@@ -99,6 +100,7 @@ Or if installed globally:
 - `get_table_info` - Get table schema and column information
 - `create_table` - Create a new table with custom schema
 - `delete_table` - Delete a table
+- `add_column` - Add a new column to an existing table
 
 ### Record Operations
 
@@ -164,6 +166,77 @@ Or if installed globally:
   }
 }
 ```
+
+### Adding Columns to Existing Tables
+
+The `add_column` tool allows you to dynamically add columns to existing tables. Here are some examples:
+
+#### Basic Column Types
+
+```json
+{
+  "tool": "add_column",
+  "arguments": {
+    "table_id": "table_id_here",
+    "title": "Description",
+    "uidt": "LongText"
+  }
+}
+```
+
+#### Column with Constraints
+
+```json
+{
+  "tool": "add_column",
+  "arguments": {
+    "table_id": "table_id_here",
+    "title": "Product Code",
+    "uidt": "SingleLineText",
+    "unique": true,
+    "rqd": true
+  }
+}
+```
+
+#### Select Column with Options
+
+```json
+{
+  "tool": "add_column",
+  "arguments": {
+    "table_id": "table_id_here",
+    "title": "Priority",
+    "uidt": "SingleSelect",
+    "meta": {
+      "options": [
+        {"title": "Low", "color": "#059669"},
+        {"title": "Medium", "color": "#d97706"},
+        {"title": "High", "color": "#dc2626"},
+        {"title": "Critical", "color": "#7c3aed"}
+      ]
+    }
+  }
+}
+```
+
+#### Currency Column
+
+```json
+{
+  "tool": "add_column",
+  "arguments": {
+    "table_id": "table_id_here",
+    "title": "Price",
+    "uidt": "Currency",
+    "meta": {
+      "currency_code": "USD"
+    }
+  }
+}
+```
+
+For more column type examples, see [Column Types Examples](examples/column-types-example.md).
 
 ### Inserting Records
 
@@ -276,26 +349,56 @@ Or if installed globally:
 
 Supported UI data types (uidt) for columns:
 
+### Basic Types
 - `SingleLineText` - Short text field
 - `LongText` - Multi-line text
-- `Number` - Numeric values
-- `Decimal` - Decimal numbers
-- `Currency` - Money values
-- `Percent` - Percentage values
-- `Email` - Email addresses
-- `URL` - Web links
-- `PhoneNumber` - Phone numbers
+- `Number` - Integer numeric values
+- `Decimal` - Decimal numbers with precision
+- `Checkbox` - Boolean true/false
+
+### Date & Time
 - `Date` - Date without time
 - `DateTime` - Date with time
 - `Time` - Time only
-- `SingleSelect` - Dropdown with single selection
-- `MultiSelect` - Multiple selections
-- `Checkbox` - Boolean true/false
+- `Duration` - Time duration
+
+### Specialized Text
+- `Email` - Email addresses with validation
+- `URL` - Web links
+- `PhoneNumber` - Phone numbers (note: use "PhoneNumber" not "Phone")
+
+### Numeric Types
+- `Currency` - Money values (requires `meta.currency_code`)
+- `Percent` - Percentage values
+- `Rating` - Star rating
+
+### Selection Types
+- `SingleSelect` - Dropdown with single selection (requires `meta.options`)
+- `MultiSelect` - Multiple selections (requires `meta.options`)
+
+### Advanced Types
 - `Attachment` - File uploads
-- `LinkToAnotherRecord` - Relationships
-- `Lookup` - Lookup values from related records
-- `Rollup` - Aggregate related records
+- `JSON` - JSON data storage
+
+### Virtual/Computed Columns
 - `Formula` - Calculated fields
+- `Rollup` - Aggregate related records
+- `Lookup` - Lookup values from related records
+- `QrCode` - Generate QR codes (requires `meta.fk_qr_value_column_id`)
+- `Barcode` - Generate barcodes (requires `meta.fk_barcode_value_column_id`)
+
+### Relational
+- `LinkToAnotherRecord` - Relationships between tables
+- `Links` - Many-to-many relationships
+
+### Special Parameters for Column Types
+
+Some column types require additional parameters in the `meta` field:
+
+- **SingleSelect/MultiSelect**: `meta.options` array with `{title, color}` objects
+- **Currency**: `meta.currency_code` (e.g., "USD", "EUR")
+- **QrCode**: `meta.fk_qr_value_column_id` - ID of column to encode
+- **Barcode**: `meta.fk_barcode_value_column_id` - ID of column to encode, optional `meta.barcode_format`
 
 ## Filter Syntax
 

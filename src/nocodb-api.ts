@@ -93,6 +93,14 @@ export class NocoDBClient {
     return response.data.columns || [];
   }
 
+  async addColumn(tableId: string, columnDefinition: any): Promise<NocoDBColumn> {
+    const response = await this.client.post(
+      `/api/v2/meta/tables/${tableId}/columns`,
+      columnDefinition
+    );
+    return response.data;
+  }
+
   // Record operations
   async createRecord(
     baseId: string,

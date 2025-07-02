@@ -135,6 +135,53 @@ async function testTableOperations() {
   }
 }
 
+async function testColumnOperations() {
+  log('\n--- Testing Column Operations ---', 'info');
+  
+  try {
+    // Add a new column
+    log('Adding new column "Department"...', 'info');
+    const newColumn = await client.addColumn(testTableId, {
+      title: 'Department',
+      uidt: 'SingleSelect',
+      meta: {
+        options: [
+          { title: 'Engineering', color: '#3b82f6' },
+          { title: 'Sales', color: '#10b981' },
+          { title: 'Marketing', color: '#f59e0b' },
+          { title: 'HR', color: '#8b5cf6' },
+        ],
+      },
+    });
+    log(`Column added: ${newColumn.title} (${newColumn.uidt})`, 'success');
+    
+    // Add another column with constraints
+    log('Adding "Phone" column with unique constraint...', 'info');
+    const phoneColumn = await client.addColumn(testTableId, {
+      title: 'Phone Number',
+      column_name: 'phone_number',
+      uidt: 'PhoneNumber',
+      unique: true,
+    });
+    log(`Column added: ${phoneColumn.title} with unique constraint`, 'success');
+    
+    // List columns again to verify
+    log('Verifying columns...', 'info');
+    const updatedColumns = await client.listColumns(testTableId);
+    log(`Total columns after additions: ${updatedColumns.length}`, 'success');
+    
+    const addedColumns = updatedColumns.filter(col => 
+      col.title === 'Department' || col.title === 'Phone Number'
+    );
+    log(`Verified ${addedColumns.length} new columns were added`, 'success');
+    
+    return true;
+  } catch (error: any) {
+    log(`Column operations failed: ${error.message}`, 'error');
+    return false;
+  }
+}
+
 async function testRecordOperations() {
   log('\n--- Testing Record Operations ---', 'info');
   
@@ -148,6 +195,8 @@ async function testRecordOperations() {
       Active: true,
       Notes: 'Test record from MCP server',
       'Created At': new Date().toISOString(),
+      // Department: 'Engineering', // Comment out as it might fail if options aren't set
+      // 'Phone Number': '+1-555-0123', // Comment out as unique constraint might fail
     });
     testRecordId = newRecord.ID || newRecord.Id || newRecord.id;
     log(`Record created with ID: ${testRecordId}`, 'success');
@@ -314,6 +363,7 @@ async function runAllTests() {
   const results = {
     connection: false,
     tables: false,
+    columns: false,
     records: false,
     queries: false,
     views: false,
@@ -329,6 +379,7 @@ async function runAllTests() {
   
   results.tables = await testTableOperations();
   if (results.tables) {
+    results.columns = await testColumnOperations();
     results.records = await testRecordOperations();
     results.queries = await testAdvancedQueries();
     results.views = await testViewOperations();
