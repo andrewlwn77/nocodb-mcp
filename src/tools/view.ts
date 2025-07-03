@@ -1,24 +1,24 @@
-import { NocoDBClient } from '../nocodb-api.js';
-import { Tool } from './database.js';
+import { NocoDBClient } from "../nocodb-api.js";
+import { Tool } from "./database.js";
 
 export const viewTools: Tool[] = [
   {
-    name: 'list_views',
-    description: 'List all views for a table',
+    name: "list_views",
+    description: "List all views for a table",
     inputSchema: {
-      type: 'object',
+      type: "object",
       properties: {
         table_id: {
-          type: 'string',
-          description: 'The ID of the table',
+          type: "string",
+          description: "The ID of the table",
         },
       },
-      required: ['table_id'],
+      required: ["table_id"],
     },
     handler: async (client: NocoDBClient, args: { table_id: string }) => {
       const views = await client.listViews(args.table_id);
       return {
-        views: views.map(view => ({
+        views: views.map((view) => ({
           id: view.id,
           title: view.title,
           type: view.type,
@@ -33,33 +33,41 @@ export const viewTools: Tool[] = [
     },
   },
   {
-    name: 'create_view',
-    description: 'Create a new view for a table',
+    name: "create_view",
+    description: "Create a new view for a table",
     inputSchema: {
-      type: 'object',
+      type: "object",
       properties: {
         table_id: {
-          type: 'string',
-          description: 'The ID of the table',
+          type: "string",
+          description: "The ID of the table",
         },
         title: {
-          type: 'string',
-          description: 'Title of the new view',
+          type: "string",
+          description: "Title of the new view",
         },
         type: {
-          type: 'number',
-          description: 'Type of view (1=Grid, 2=Gallery, 3=Form, 4=Kanban, 5=Calendar)',
+          type: "number",
+          description:
+            "Type of view (1=Grid, 2=Gallery, 3=Form, 4=Kanban, 5=Calendar)",
           default: 1,
         },
       },
-      required: ['table_id', 'title'],
+      required: ["table_id", "title"],
     },
-    handler: async (client: NocoDBClient, args: {
-      table_id: string;
-      title: string;
-      type?: number;
-    }) => {
-      const view = await client.createView(args.table_id, args.title, args.type || 1);
+    handler: async (
+      client: NocoDBClient,
+      args: {
+        table_id: string;
+        title: string;
+        type?: number;
+      },
+    ) => {
+      const view = await client.createView(
+        args.table_id,
+        args.title,
+        args.type || 1,
+      );
       return {
         view: {
           id: view.id,
@@ -74,41 +82,44 @@ export const viewTools: Tool[] = [
     },
   },
   {
-    name: 'get_view_data',
-    description: 'Get records from a specific view',
+    name: "get_view_data",
+    description: "Get records from a specific view",
     inputSchema: {
-      type: 'object',
+      type: "object",
       properties: {
         base_id: {
-          type: 'string',
-          description: 'The ID of the base/project',
+          type: "string",
+          description: "The ID of the base/project",
         },
         table_name: {
-          type: 'string',
-          description: 'The name of the table',
+          type: "string",
+          description: "The name of the table",
         },
         view_id: {
-          type: 'string',
-          description: 'The ID of the view',
+          type: "string",
+          description: "The ID of the view",
         },
         limit: {
-          type: 'number',
-          description: 'Number of records to return',
+          type: "number",
+          description: "Number of records to return",
         },
         offset: {
-          type: 'number',
-          description: 'Number of records to skip',
+          type: "number",
+          description: "Number of records to skip",
         },
       },
-      required: ['base_id', 'table_name', 'view_id'],
+      required: ["base_id", "table_name", "view_id"],
     },
-    handler: async (client: NocoDBClient, args: {
-      base_id: string;
-      table_name: string;
-      view_id: string;
-      limit?: number;
-      offset?: number;
-    }) => {
+    handler: async (
+      client: NocoDBClient,
+      args: {
+        base_id: string;
+        table_name: string;
+        view_id: string;
+        limit?: number;
+        offset?: number;
+      },
+    ) => {
       const result = await client.listRecords(args.base_id, args.table_name, {
         viewId: args.view_id,
         limit: args.limit,

@@ -1,5 +1,5 @@
-import { NocoDBClient } from '../nocodb-api.js';
-import { z } from 'zod';
+import { NocoDBClient } from "../nocodb-api.js";
+import { z } from "zod";
 
 export interface Tool {
   name: string;
@@ -10,16 +10,16 @@ export interface Tool {
 
 export const databaseTools: Tool[] = [
   {
-    name: 'list_bases',
-    description: 'List all available NocoDB bases/projects',
+    name: "list_bases",
+    description: "List all available NocoDB bases/projects",
     inputSchema: {
-      type: 'object',
+      type: "object",
       properties: {},
     },
     handler: async (client: NocoDBClient) => {
       const bases = await client.listBases();
       return {
-        bases: bases.map(base => ({
+        bases: bases.map((base) => ({
           id: base.id,
           title: base.title,
           status: base.status,
@@ -31,17 +31,17 @@ export const databaseTools: Tool[] = [
     },
   },
   {
-    name: 'get_base_info',
-    description: 'Get detailed information about a specific base/project',
+    name: "get_base_info",
+    description: "Get detailed information about a specific base/project",
     inputSchema: {
-      type: 'object',
+      type: "object",
       properties: {
         base_id: {
-          type: 'string',
-          description: 'The ID of the base/project',
+          type: "string",
+          description: "The ID of the base/project",
         },
       },
-      required: ['base_id'],
+      required: ["base_id"],
     },
     handler: async (client: NocoDBClient, args: { base_id: string }) => {
       const base = await client.getBase(args.base_id);

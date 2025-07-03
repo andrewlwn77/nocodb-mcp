@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2025-07-02
+
+### Added
+- New `delete_column` tool for removing columns from existing tables
+- Support for deleting columns by either column ID or column name
+- Comprehensive test coverage for column deletion functionality
+
+### Fixed
+- Enhanced `addColumn` method in NocoDBClient to properly extract the newly created column from the API response
+- Added proper handling for the table object response from the column creation endpoint
+
+### Changed
+- Updated README with documentation and examples for the `delete_column` tool
+
 ## [0.2.0] - 2025-07-02
 
 ### Added

@@ -70,7 +70,7 @@ export interface QueryOptions {
 
 export interface AggregateOptions {
   column_name: string;
-  func: 'count' | 'sum' | 'avg' | 'min' | 'max';
+  func: "count" | "sum" | "avg" | "min" | "max";
   where?: string;
 }
 

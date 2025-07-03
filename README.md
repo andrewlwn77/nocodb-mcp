@@ -101,6 +101,7 @@ Or if installed globally:
 - `create_table` - Create a new table with custom schema
 - `delete_table` - Delete a table
 - `add_column` - Add a new column to an existing table
+- `delete_column` - Delete a column from a table
 
 ### Record Operations
 
@@ -237,6 +238,36 @@ The `add_column` tool allows you to dynamically add columns to existing tables. 
 ```
 
 For more column type examples, see [Column Types Examples](examples/column-types-example.md).
+
+### Deleting Columns
+
+The `delete_column` tool allows you to remove columns from existing tables. You can identify the column to delete by either its ID or name.
+
+#### Delete by Column ID
+
+```json
+{
+  "tool": "delete_column",
+  "arguments": {
+    "table_id": "table_id_here",
+    "column_id": "column_id_to_delete"
+  }
+}
+```
+
+#### Delete by Column Name
+
+```json
+{
+  "tool": "delete_column",
+  "arguments": {
+    "table_id": "table_id_here",
+    "column_name": "ColumnToDelete"
+  }
+}
+```
+
+Note: The tool will search for columns matching either the `column_name` or `title` field, making it flexible for different naming conventions.
 
 ### Inserting Records
 
